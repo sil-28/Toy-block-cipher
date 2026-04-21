@@ -22,7 +22,7 @@ The structure mirrors the design principles behind AES, making this a useful ped
 toy-block-cipher/
 ├── README.md
 └── magma/
-    └── toyblock.m      # Full implementation in Magma
+    └── ToyBlockCipher.mag      # Full implementation in Magma
 ```
 
 ---
@@ -66,7 +66,7 @@ Inverts the encryption process using inverse S-box and the same permutation (whi
 Open Magma and load the file:
 
 ```magma
-load "magma/toyblock.m";
+load "magma/ToyBlockCipher.mag";
 
 // Define a 16-bit key and plaintext as sequences over GF(2)
 K := [0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1];
@@ -123,8 +123,8 @@ The file includes a `test()` procedure that verifies both encryption and decrypt
 The procedure also verifies that decryption correctly inverts encryption for all four cases. Run it with:
 
 ```magma
-load "magma/toyblock.m";
-load "magma/test.m";
+load "magma/ToyBlockCipher.mag";
+load "magma/test.txt";
 test();
 // Expected output:
 // Correct!

@@ -1,0 +1,146 @@
+function Substitution(m)
+	// m is 4 bits
+	V4:=VectorSpace(GF(2),4);
+	I:=Integers();
+	
+	Subs:=[<V4![0,0,0,0],V4![1,1,1,0]>, <V4![0,0,0,1],V4![0,1,0,0]>, <V4![0,0,1,0],V4![1,1,0,1]>, <V4![0,0,1,1],V4![0,0,0,1]>,
+			<V4![0,1,0,0],V4![0,0,1,0]>,<V4![0,1,0,1],V4![1,1,1,1]>, <V4![0,1,1,0],V4![1,0,1,1]>, <V4![0,1,1,1],V4![1,0,0,0]>, 
+			<V4![1,0,0,0],V4![0,0,1,1]>,<V4![1,0,0,1],V4![1,0,1,0]>, <V4![1,0,1,0],V4![0,1,1,0]>, <V4![1,0,1,1],V4![1,1,0,0]>, 
+			<V4![1,1,0,0],V4![0,1,0,1]>,<V4![1,1,0,1],V4![1,0,0,1]>, <V4![1,1,1,0],V4![0,0,0,0]>, <V4![1,1,1,1],V4![0,1,1,1]>
+		];
+	m16:=&+[2^(i-1)*I!(m[5-i]): i in [1..4]];
+	c:=Subs[m16+1][2];
+	
+	return c;
+end function;
+
+function Permutation(m)
+	// m is 16 bits
+	V16:=VectorSpace(GF(2),16);
+	I:=Integers();
+	c:=V16![0 : i in [1..16]];
+	
+	Perm:=[<1,1>, <2,5>, <3,9>, <4,13>, <5,2>, <6,6>, <7,10>, <8,14>,
+			<9,3>, <10,7>, <11,11>, <12,15>, <13,4>, <14,8>, <15,12>, <16,16>
+		];
+	
+	for i in [1..16] do
+		c[Perm[i][2]]:=m[i];
+	end for;
+	
+	return c;
+end function;
+
+function InverseSubstitution(m)
+	V4:=VectorSpace(GF(2),4);
+	I:=Integers();
+	
+	Subs:=[<V4![0,0,0,0],V4![1,1,1,0]>, <V4![0,0,0,1],V4![0,0,1,1]>, <V4![0,0,1,0],V4![0,1,0,0]>, <V4![0,0,1,1],V4![1,0,0,0]>,
+			<V4![0,1,0,0],V4![0,0,0,1]>,<V4![0,1,0,1],V4![1,1,0,0]>, <V4![0,1,1,0],V4![1,0,1,0]>, <V4![0,1,1,1],V4![1,1,1,1]>, 
+			<V4![1,0,0,0],V4![0,1,1,1]>,<V4![1,0,0,1],V4![1,1,0,1]>, <V4![1,0,1,0],V4![1,0,0,1]>, <V4![1,0,1,1],V4![0,1,1,0]>, 
+			<V4![1,1,0,0],V4![1,0,1,1]>,<V4![1,1,0,1],V4![0,0,1,0]>, <V4![1,1,1,0],V4![0,0,0,0]>, <V4![1,1,1,1],V4![0,1,0,1]>
+		];
+	m16:=&+[2^(i-1)*I!(m[5-i]): i in [1..4]];
+	c:=Subs[m16+1][2];
+	
+	return c;
+end function;
+
+function InversePermutation(m)
+	// m is 16 bits	
+	V16:=VectorSpace(GF(2),16);
+	I:=Integers();
+	c:=V16![0 : i in [1..16]];
+	
+	Perm:=[<1,1>, <2,5>, <3,9>, <4,13>, <5,2>, <6,6>, <7,10>, <8,14>,
+			<9,3>, <10,7>, <11,11>, <12,15>, <13,4>, <14,8>, <15,12>, <16,16>
+		];
+	
+	for i in [1..16] do
+		c[Perm[i][2]]:=m[i];
+	end for;
+	
+	return c;
+end function;
+
+function KSchedule(K)
+	// K is sequence of length 16
+	// Ks is a sequence with 5 sequences each of length 16
+	V16:=VectorSpace(GF(2),16);
+	V4:=VectorSpace(GF(2),4);
+	S16:=Sym(Set(V4));
+	s1:=S16!(V4![1,1,0,1], V4![0,1,0,1], V4![1,0,1,1], V4![1,0,0,1], V4![0,1,1,1], V4![0,0,1,0], V4![0,0,0,1])
+				(V4![1,0,1,0], V4![1,1,1,1], V4![1,1,1,0], V4![0,1,1,0], V4![0,0,1,1]) 
+				(V4![0,1,0,0], V4![1,0,0,0]);
+
+	s2:=S16!(V4![1,1,0,0], V4![1,1,1,0], V4![0,0,0,0], V4![1,1,0,1], V4![1,1,1,1], V4![1,0,0,1], V4![0,1,0,0], V4![0,0,0,1], 
+				V4![0,0,1,0], V4![0,1,1,0], V4![1,0,1,1], V4![0,1,1,1], V4![0,0,1,1], V4![0,1,0,1])
+					(V4![1,0,1,0], V4![1,0,0,0]);
+	
+	Ks:=[K];
+	
+	for i in [1..4] do 
+		S:=[];
+		Seq11:=V4![Ks[i][j] : j in [1..4]];
+		Seq12:=V4![Ks[i][j] : j in [5..8]];
+		Seq21:=V4![Ks[i][j] : j in [9..12]];
+		Seq22:=V4![Ks[i][j] : j in [13..16]];
+		
+		S:=ElementToSequence(Seq12^s2) cat ElementToSequence(Seq11^s1) cat ElementToSequence(Seq22^s2) cat ElementToSequence(Seq21^s1);
+		
+		Append(~Ks,S);
+	end for;
+	
+	return Ks;
+end function;
+
+function ToyBlock(K,M)
+	// K and M are sequence of length 16
+	V4:=VectorSpace(GF(2),4);
+	V16:=VectorSpace(GF(2),16);
+	Ks:=KSchedule(K);
+	C:=[M[j] : j in [1..16]];
+	
+	for i in [1..4] do
+		C:=[C[j]+Ks[2][j] : j in [1..16]];
+		sb1:=ElementToSequence(Substitution(V4![C[k] : k in [1..4]]));
+		sb2:=ElementToSequence(Substitution(V4![C[k] : k in [5..8]]));
+		sb3:=ElementToSequence(Substitution(V4![C[k] : k in [9..12]]));
+		sb4:=ElementToSequence(Substitution(V4![C[k] : k in [13..16]]));
+		C:=sb1 cat sb2 cat sb3 cat sb4;
+		
+		if i ne 4 then
+			C:=Permutation(V16!C);
+		end if;
+	end for;
+	
+	C:=[C[j]+Ks[5][j] : j in [1..16]];
+	
+	return C;
+end function;
+
+
+function ToyBlockDecipher(K,C)
+	// K and C are sequence of length 16
+	V4:=VectorSpace(GF(2),4);
+	V16:=VectorSpace(GF(2),16);
+	Ks:=KSchedule(K);
+	M:=[C[j] : j in [1..16]];
+	
+	for i in [1..4] do
+		M:=[M[j]+Ks[6-i][j] : j in [1..16]];
+		if i ne 1 then
+			M:=Permutation(V16!M);
+		end if;
+		
+		sb1:=ElementToSequence(InverseSubstitution(V4![M[k] : k in [1..4]]));
+		sb2:=ElementToSequence(InverseSubstitution(V4![M[k] : k in [5..8]]));
+		sb3:=ElementToSequence(InverseSubstitution(V4![M[k] : k in [9..12]]));
+		sb4:=ElementToSequence(InverseSubstitution(V4![M[k] : k in [13..16]]));
+		M:=sb1 cat sb2 cat sb3 cat sb4;		
+	end for;
+	
+	M:=[M[j]+Ks[1][j] : j in [1..16]];
+	
+	return M;
+end function;

@@ -1,0 +1,22 @@
+procedure test()
+	K1:=[GF(2)!0 : i in [1..16]];
+	K2:=[GF(2)!1 : i in [1..16]];
+	M1:=K1;
+	M2:=K2;
+	C1:=[ GF(2)!0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1 ];
+	C2:=[ GF(2)!0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1 ];
+	C3:=[ GF(2)!0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1 ];
+	C4:=[ GF(2)!0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1 ];
+	error if ToyBlock(K1,M1) ne C1, "error in the first computation\n M:=",M1,"K:=",K1,"C:=",C1,"Result:=",ToyBlock(K1,M1);
+	error if ToyBlock(K1,M2) ne C2, "error in the second computation\n M:=",M2,"K:=",K1,"C:=",C2,"Result:=",ToyBlock(K1,M2);
+	error if ToyBlock(K2,M1) ne C3, "error in the third computation\n M:=",M1,"K:=",K2,"C:=",C3,"Result:=",ToyBlock(K2,M1);
+	error if ToyBlock(K2,M2) ne C4, "error in the fourth computation\n M:=",M2,"K:=",K2,"C:=",C4,"Result:=",ToyBlock(K2,M2);
+	"Correct!\n";
+	error if ToyBlockDecipher(K1,C1) ne M1, "error";
+	error if ToyBlockDecipher(K1,C2) ne M2, "error";
+	error if ToyBlockDecipher(K2,C3) ne M1, "error";
+	error if ToyBlockDecipher(K2,C4) ne M2, "error";
+	"Correct!\n";
+end procedure;
+
+test();

@@ -102,7 +102,7 @@ function ToyBlock(K,M)
 	C:=[M[j] : j in [1..16]];
 	
 	for i in [1..4] do
-		C:=[C[j]+Ks[2][j] : j in [1..16]];
+		C:=[C[j]+Ks[i][j] : j in [1..16]];
 		sb1:=ElementToSequence(Substitution(V4![C[k] : k in [1..4]]));
 		sb2:=ElementToSequence(Substitution(V4![C[k] : k in [5..8]]));
 		sb3:=ElementToSequence(Substitution(V4![C[k] : k in [9..12]]));
@@ -130,7 +130,7 @@ function ToyBlockDecipher(K,C)
 	for i in [1..4] do
 		M:=[M[j]+Ks[6-i][j] : j in [1..16]];
 		if i ne 1 then
-			M:=Permutation(V16!M);
+			M:=InversePermutation(V16!M);
 		end if;
 		
 		sb1:=ElementToSequence(InverseSubstitution(V4![M[k] : k in [1..4]]));
